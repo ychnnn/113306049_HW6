@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>1A2B Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #history-container {
+            margin-top: 20px;
+            border: 2px solid;
+            border-color:  #000;
+            padding: 10px;
+            display: inline-block;
+            background-color: #f9f9f9;
+            text-align: left;
+            width: 60%;
+        }
+       
+        #history {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>113306049_HW6_1A2B</h1>
+
+    <p><input type="text" id="userInput" placeholder="輸入四位數字">
+    <button onclick="checkGuess()">猜!</button></p>
+
+    <div id="history-container">
+        <p>遊戲紀錄：</p>
+        <ul id="history"></ul>
+    </div>
+
+    <script>
+        // 產生隨機四位數字且每位數字不重複
+        function generateRandomNumber() {
+            let digits = Array.from({length: 10}, (_, i) => i); // 0-9 的數字
+            let result = [];
+            while (result.length < 4) {
+                let index = Math.floor(Math.random() * digits.length);
+                result.push(digits[index]);
+                digits.splice(index, 1); // 移除已選取的數字
+            }
+            return result.join('');
+        }
+
+        const secretNumber = generateRandomNumber();
+        let attempts = 0;
+
+        function checkGuess() {
+            const userInput = document.getElementById("userInput").value;
+            const historyList = document.getElementById("history");
+
+            // 驗證輸入
+            if (userInput.length !== 4 || isNaN(userInput)) {
+                alert("請輸入四位數字！");
+                return;
+            }
+
+            if (new Set(userInput).size !== 4) {
+                alert("請輸入不重複的四位數字！");
+                return;
+            }
+
+            // 比對答案
+            attempts++;
+            let a = 0, b = 0;
+            for (let i = 0; i < 4; i++) {
+                if (userInput[i] === secretNumber[i]) {
+                    a++;
+                } else if (secretNumber.includes(userInput[i])) {
+                    b++;
+                }
+            }
+
+            // 紀錄結果
+            const result = `第${attempts}次: ${userInput} -> ${a}A${b}B`;
+            const historyItem = document.createElement("li");
+            historyItem.textContent = result;
+            historyList.appendChild(historyItem);
+
+            if (a === 4) {
+                alert("答對了！");
+            } else {
+                alert("答錯了！");
+            }
+
+            document.getElementById("userInput").value = ""; // 清空輸入框
+        }
+    </script>
+</body>
+</html>
